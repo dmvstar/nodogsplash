@@ -891,14 +891,13 @@ static char *construct_querystring(t_client *client, char *originurl, char *quer
 
 		get_client_interface(clientif, sizeof(clientif), client->mac);
 		snprintf(querystr, QUERYMAXLEN,
-			"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s",
+			"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s",
 			client->ip, "&",
 			config->gw_name, "&",
 			client->token, "&",
 			client->mac, "&",
 			config->gw_address, "&",
-			config->authdir, "&",
-			config->gw_mac);
+			config->authdir);
 		debug(LOG_DEBUG, "querystr=%s", querystr);
 
 	} else if (config->fas_secure_enabled == 1) {
