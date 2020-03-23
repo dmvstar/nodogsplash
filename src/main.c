@@ -264,17 +264,24 @@ main_loop(void)
 		debug(LOG_ERR, "Could not get MAC address information of %s, exiting...", config->gw_interface);
 		exit(1);
 	}
-	debug(LOG_NOTICE, "Detected gateway %s at %s (%s)", config->gw_interface, config->gw_ip, config->gw_mac);
+	debug(LOG_NOTICE, "Detected gateway %s at %s %d (%s)", config->gw_interface, config->gw_ip, config->gw_port, config->gw_mac);
 
 	/* Initializes the web server */
-	if ((webserver = MHD_start_daemon(MHD_USE_EPOLL_INTERNALLY | MHD_USE_TCP_FASTOPEN,
-							config->gw_port,
-							NULL, NULL,
-							libmicrohttpd_cb, NULL,
-							MHD_OPTION_CONNECTION_TIMEOUT, (unsigned int) 120,
-							MHD_OPTION_LISTENING_ADDRESS_REUSE, 1,
-							MHD_OPTION_UNESCAPE_CALLBACK, unescape,
-							MHD_OPTION_END)) == NULL) {
+	if ((webserver = MHD_start_daemon(		
+							0 
+		#ifdef TCP_FASTOPEN
+							| MHD_USE_EPOLL_INTERNALLY  
+							| MHD_USE_TCP_FASTOPEN 
+		#endif
+							| MHD_USE_AUTO | MHD_USE_INTERNAL_POLLING_THREAD 
+							| MHD_USE_ERROR_LOG
+							, config->gw_port
+							, NULL, NULL
+							, &libmicrohttpd_cb, NULL
+							, MHD_OPTION_CONNECTION_TIMEOUT, (unsigned int) 120
+							, MHD_OPTION_LISTENING_ADDRESS_REUSE, 1
+							, MHD_OPTION_UNESCAPE_CALLBACK, unescape
+							, MHD_OPTION_END)) == NULL) {
 		debug(LOG_ERR, "Could not create web server: %s", strerror(errno));
 		exit(1);
 	}
