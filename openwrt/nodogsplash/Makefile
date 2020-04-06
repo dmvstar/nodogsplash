@@ -76,17 +76,18 @@ endef
 define Package/nodogsplash/postinst
 #!/bin/sh
 echo Postinst
+chmod +x $(1)/etc/config/scripts/location_c.sh
 if [ -f /etc/crontabs/root ] 
 then
   echo Check cron
   grep -q 'location_c.sh' /etc/crontabs/root && exit 0
   echo Add line to cron
-  cat $(1)/etc/config/scripts/root
   cat $(1)/etc/config/scripts/root >> /etc/crontabs/root
-  chmod +x $(1)/etc/config/scripts/location_c.sh
+  /etc/init.d/cron restart
 else
   echo Create cron
   cat $(1)/etc/config/scripts/root > /etc/crontabs/root
+  /etc/init.d/cron start
 fi
 endef
 
