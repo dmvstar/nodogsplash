@@ -41,11 +41,9 @@ define Package/nodogsplash/description
 endef
 
 define Package/nodogsplash/install
-
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nodogsplash $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ndsctl $(1)/usr/bin/
-
 	$(INSTALL_DIR) $(1)/etc/nodogsplash/htdocs/images
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/config/scripts
@@ -56,12 +54,10 @@ define Package/nodogsplash/install
 	$(CP) $(PKG_BUILD_DIR)/resources/splash.css $(1)/etc/nodogsplash/htdocs/
 	$(CP) $(PKG_BUILD_DIR)/resources/status.html $(1)/etc/nodogsplash/htdocs/
 	$(CP) $(PKG_BUILD_DIR)/resources/splash.jpg $(1)/etc/nodogsplash/htdocs/images/
-
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/nodogsplash $(1)/etc/config/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/location_c.sh $(1)/etc/config/scripts/
-
-	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/crontabs/
-
+#	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/crontabs/
+	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/config/scripts/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/init.d/nodogsplash $(1)/etc/init.d/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/uci-defaults/40_nodogsplash $(1)/etc/uci-defaults/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/usr/lib/nodogsplash/restart.sh $(1)/usr/lib/nodogsplash/
@@ -75,6 +71,23 @@ define Package/nodogsplash/postrm
 #!/bin/sh
 uci delete firewall.nodogsplash
 uci commit firewall
+endef
+
+define Package/nodogsplash/postinst
+#!/bin/sh
+echo Postinst
+if [ -f /etc/crontabs/root ] 
+then
+  echo Check cron
+  grep -q 'location_c.sh' /etc/crontabs/root && exit 0
+  echo Add line to cron
+  cat $(1)/etc/config/scripts/root
+  cat $(1)/etc/config/scripts/root >> /etc/crontabs/root
+  chmod +x $(1)/etc/config/scripts/location_c.sh
+else
+  echo Create cron
+  cat $(1)/etc/config/scripts/root > /etc/crontabs/root
+fi
 endef
 
 define Package/nodogsplash/conffiles
