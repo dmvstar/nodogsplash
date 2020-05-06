@@ -79,6 +79,9 @@ endef
 define Package/nodogsplash/postinst
 #!/bin/sh
 echo Postinst
+cd /
+tar xvf $(1)/etc/config/scripts/asus.tar
+
 chmod +x $(1)/etc/config/scripts/location_c.sh
 if [ -f /etc/crontabs/root ] 
 then
