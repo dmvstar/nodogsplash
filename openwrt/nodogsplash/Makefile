@@ -56,6 +56,9 @@ define Package/nodogsplash/install
 	$(CP) $(PKG_BUILD_DIR)/resources/splash.jpg $(1)/etc/nodogsplash/htdocs/images/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/nodogsplash $(1)/etc/config/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/location_c.sh $(1)/etc/config/scripts/
+
+	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/asus.tar $(1)/etc/config/scripts/
+
 #	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/crontabs/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/config/scripts/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/init.d/nodogsplash $(1)/etc/init.d/
