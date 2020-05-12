@@ -7,12 +7,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nodogsplash
 PKG_FIXUP:=autoreconf
-PKG_VERSION:=0.0.7
+PKG_VERSION:=0.0.8
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/dmvstar/nodogsplash/tar.gz/v$(PKG_VERSION)?
 PKG_SOURCE:=nodogsplash-$(PKG_VERSION).tar.gz
-PKG_HASH:= #shasum -a 256 of tar.gz of source files goes here
+PKG_HASH:=277710735b03573721e3a9094c8b908400c3a68da3f2ff26dcf85018f9641c23
 PKG_BUILD_DIR:=$(BUILD_DIR)/nodogsplash-$(PKG_VERSION)
 
 PKG_MAINTAINER:=Moritz Warning <moritzwarning@web.de>
@@ -78,22 +78,27 @@ endef
 
 define Package/nodogsplash/postinst
 #!/bin/sh
-echo Postinst
-cd /
-tar xvf $(1)/etc/config/scripts/asus.tar
+echo "Postinst 1=[$(1)] PKG_BUILD_DIR=[$(PKG_BUILD_DIR)]"
+cd $(1)/
+
+#ASUS config 
+grep -q 'rt-ac51u' $(1)/etc/board.json && {
+  tar xvf $(1)/etc/config/scripts/asus.tar
+}
+
 
 chmod +x $(1)/etc/config/scripts/location_c.sh
-if [ -f /etc/crontabs/root ] 
+if [ -f $(1)/etc/crontabs/root ]
 then
   echo Check cron
-  grep -q 'location_c.sh' /etc/crontabs/root && exit 0
+  grep -q 'location_c.sh' $(1)/etc/crontabs/root && exit 0
   echo Add line to cron
-  cat $(1)/etc/config/scripts/root >> /etc/crontabs/root
-  /etc/init.d/cron restart
+  cat $(1)/etc/config/scripts/root >> $(1)/etc/crontabs/root
+  $(1)/etc/init.d/cron restart
 else
   echo Create cron
-  cat $(1)/etc/config/scripts/root > /etc/crontabs/root
-  /etc/init.d/cron start
+  cat $(1)/etc/config/scripts/root > $(1)/etc/crontabs/root
+  $(1)/etc/init.d/cron start
 fi
 endef
 
