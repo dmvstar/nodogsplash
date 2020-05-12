@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nodogsplash
 PKG_FIXUP:=autoreconf
-PKG_VERSION:=0.0.8
+PKG_VERSION:=0.0.9
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/dmvstar/nodogsplash/tar.gz/v$(PKG_VERSION)?
