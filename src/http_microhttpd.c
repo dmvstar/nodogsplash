@@ -893,7 +893,7 @@ static int jsoneq(const char *json, jsmntok_t *tok, const char *s)
 
 #define BOARD_JSON_PATH "/etc/config/scripts/board_ugb.json"
 
-static char[256] add_info;
+static char add_info[256];
 
 static int parce_board_ugb(char *filename)
 {

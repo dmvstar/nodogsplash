@@ -2,5 +2,7 @@
 	"serial_number":	"KAIWDV000912",
 	"modem_phone":		"+380937775544",
 	"madem_mac":		"A85E454E0300",
+	"inventory_numb": 	"450101934",
+	"department": 		"21009, м. Киев, вул. Хмельницкого, 16-22",
 	"board_desc":		"Test Asus 50 OpenWrt"
 }
