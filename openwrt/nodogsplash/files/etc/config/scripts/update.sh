@@ -34,8 +34,10 @@ fi
 
 [ $UPDATE -eq 1 ] && {
     echo UPDATE
-
+    cd /
+    tar xvf /etc/config/scripts/updates/update-pre.tar
 }
 
-echo /sbin/reboot
+sleep 5
+/sbin/reboot
 

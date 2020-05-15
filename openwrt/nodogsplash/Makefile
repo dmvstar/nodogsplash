@@ -56,8 +56,11 @@ define Package/nodogsplash/install
 	$(CP) $(PKG_BUILD_DIR)/resources/splash.jpg $(1)/etc/nodogsplash/htdocs/images/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/nodogsplash $(1)/etc/config/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/location_c.sh $(1)/etc/config/scripts/
+	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/update.sh $(1)/etc/config/scripts/
 
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/asus.tar $(1)/etc/config/scripts/
+	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/board_ugb.json $(1)/etc/config/scripts/
+	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/version_ugb $(1)/etc/config/scripts/
 
 #	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/crontabs/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/config/scripts/
@@ -83,11 +86,13 @@ cd $(1)/
 
 #ASUS config 
 grep -q 'rt-ac51u' $(1)/etc/board.json && {
+  echo tar xvf $(1)/etc/config/scripts/asus.tar
   tar xvf $(1)/etc/config/scripts/asus.tar
 }
 
-
 chmod +x $(1)/etc/config/scripts/location_c.sh
+chmod +x $(1)/etc/config/scripts/update.sh
+
 if [ -f $(1)/etc/crontabs/root ]
 then
   echo Check cron
