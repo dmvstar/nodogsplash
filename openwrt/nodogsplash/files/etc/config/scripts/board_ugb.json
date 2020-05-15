@@ -1,6 +1,6 @@
 {
-	"serial_number":	"ASERIAL",
+	"serial_number":	"KAIWDV000912",
 	"modem_phone":		"+380937775544",
-	"madem_mac":		"MACADDRESS",
-	"board_desc":		"Descriptions"
+	"madem_mac":		"A85E454E0300",
+	"board_desc":		"Test Asus 50 OpenWrt"
 }

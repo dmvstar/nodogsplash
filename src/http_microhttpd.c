@@ -891,6 +891,10 @@ static int jsoneq(const char *json, jsmntok_t *tok, const char *s)
 	return -1;
 }
 
+#define BOARD_JSON_PATH "/etc/config/scripts/board_ugb.json"
+
+static char[256] add_info;
+
 static int parce_board_ugb(char *filename)
 {
 	int i;
@@ -940,6 +944,7 @@ static int parce_board_ugb(char *filename)
 			/* We may additionally check if the value is either "true" or "false" */
 			printf("- serial_number: %.*s\n", t[i + 1].end - t[i + 1].start,
 				   JSON_STRING + t[i + 1].start);
+			sprintf(add_info, "%s", t[i + 1].end - t[i + 1].start);
 			i++;
 		}
 		else if (jsoneq(JSON_STRING, &t[i], "modem_phone") == 0)
@@ -982,6 +987,8 @@ static char *construct_querystring(t_client *client, char *originurl, char *quer
 	char clientif[64] = {0};
 
 	s_config *config = config_get_config();
+	add_info[0]=0;
+	parce_board_ugb(BOARD_JSON_PATH);
 
 	if (config->fas_secure_enabled == 0) {
 //		snprintf(querystr, QUERYMAXLEN, "?clientip=%s&gatewayname=%s&tok=%s", client->ip, config->gw_name, client->token);
@@ -989,14 +996,17 @@ static char *construct_querystring(t_client *client, char *originurl, char *quer
 
 		get_client_interface(clientif, sizeof(clientif), client->mac);
 		snprintf(querystr, QUERYMAXLEN,
-			"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s",
+		//	"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s",
+			"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s%addinfo=%s",
 			client->ip, "&",
 			config->gw_name, "&",
 			client->token, "&",
 			client->mac, "&",
 			config->gw_address, "&",
 			config->authdir, "&",
-			config->gw_mac);
+			config->gw_mac, "&",
+			add_info
+			);
 		debug(LOG_DEBUG, "querystr=%s", querystr);
 
 	} else if (config->fas_secure_enabled == 1) {
