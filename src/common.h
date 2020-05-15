@@ -34,6 +34,8 @@
 
 /* Separator for Preauth query string */
 #define QUERYSEPARATOR ", "
+#define QUERYSEPARATOR_AT "&"
+
 
 /* Max dynamic html page size in bytes */
 #define HTMLMAXSIZE 4096

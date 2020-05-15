@@ -22,6 +22,9 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <stdint.h>
+
+#include <stdio.h>
+
 #include <string.h>
 #include <pthread.h>
 #include <linux/limits.h>
@@ -907,32 +910,45 @@ static int parce_board_ugb(char *filename)
 
 	fp = fopen(filename, "r");
 
+	debug(LOG_DEBUG,"fopen %s.\n", filename);
+
 	if (fp == NULL)
 	{
-		printf("Can't open file or file doesn't exist %s.\n", filename);
+		debug(LOG_DEBUG,"Can't open file or file doesn't exist %s.\n", filename);
 		return 1;
 	}
 	else
 	{
-		fread(buf, 1, 1024 * 100, fp);
+
+//debug(LOG_DEBUG,"fread %s.\n", filename);		
+		fread(buf, 1, 1024 * 10, fp);
+
+//debug(LOG_DEBUG,"buf %s.\n", buf);
+	
 		buf[(sizeof buf) - 1] = 0;
 		JSON_STRING = buf;
+	
+//debug(LOG_DEBUG,"JSON_STRING %s.\n", JSON_STRING);
 		fclose(fp);
 	}
+
+//debug(LOG_DEBUG,"jsmn_init\n");
 
 	jsmn_init(&p);
 	r = jsmn_parse(&p, JSON_STRING, strlen(JSON_STRING), t,
 				   sizeof(t) / sizeof(t[0]));
 	if (r < 0)
 	{
-		printf("Failed to parse JSON: %d\n", r);
+		debug(LOG_DEBUG
+					,"Failed to parse JSON: %d\n", r);
 		return 1;
 	}
 
 	/* Assume the top-level element is an object */
 	if (r < 1 || t[0].type != JSMN_OBJECT)
 	{
-		printf("Object expected\n");
+		debug(LOG_DEBUG
+					,"Object expected\n");
 		return 1;
 	}
 
@@ -942,34 +958,51 @@ static int parce_board_ugb(char *filename)
 		if (jsoneq(JSON_STRING, &t[i], "serial_number") == 0)
 		{
 			/* We may additionally check if the value is either "true" or "false" */
-			printf("- serial_number: %.*s\n", t[i + 1].end - t[i + 1].start,
-				   JSON_STRING + t[i + 1].start);
-			sprintf(add_info, "%s", t[i + 1].end - t[i + 1].start);
+			//printf("- serial_number: %.*s\n", t[i + 1].end - t[i + 1].start,
+			//	   JSON_STRING + t[i + 1].start);
+			sprintf(add_info, "%.*s" , t[i + 1].end - t[i + 1].start,
+             	   JSON_STRING + t[i + 1].start); 
+			debug(LOG_DEBUG
+					, " - serial_number: %.*s\n"
+					, t[i + 1].end - t[i + 1].start
+					, JSON_STRING + t[i + 1].start);
 			i++;
 		}
 		else if (jsoneq(JSON_STRING, &t[i], "modem_phone") == 0)
 		{
 			/* We may want to do strtol() here to get numeric value */
-			printf("- modem_phone: %.*s\n", t[i + 1].end - t[i + 1].start,
-				   JSON_STRING + t[i + 1].start);
+			//printf("- modem_phone: %.*s\n", t[i + 1].end - t[i + 1].start,
+			//	   JSON_STRING + t[i + 1].start);
 			i++;
 		}
 		else if (jsoneq(JSON_STRING, &t[i], "madem_mac") == 0)
 		{
-			printf("- madem_mac: %.*s\n", t[i + 1].end - t[i + 1].start,
-				   JSON_STRING + t[i + 1].start);
+			//printf("- madem_mac: %.*s\n", t[i + 1].end - t[i + 1].start,
+			//	   JSON_STRING + t[i + 1].start);
 			i++;
 		}
 		else if (jsoneq(JSON_STRING, &t[i], "board_desc") == 0)
 		{
-			printf("- board_desc: %.*s\n", t[i + 1].end - t[i + 1].start,
-				   JSON_STRING + t[i + 1].start);
+			//printf("- board_desc: %.*s\n", t[i + 1].end - t[i + 1].start,
+			//	   JSON_STRING + t[i + 1].start);
+			i++;
+		}
+		else if (jsoneq(JSON_STRING, &t[i], "inventory_numb") == 0)
+		{
+			//printf("- inventory_numb: %.*s\n", t[i + 1].end - t[i + 1].start,
+			//	   JSON_STRING + t[i + 1].start);
+			i++;
+		}
+		else if (jsoneq(JSON_STRING, &t[i], "department") == 0)
+		{
+			//printf("- department: %.*s\n", t[i + 1].end - t[i + 1].start,
+			//	   JSON_STRING + t[i + 1].start);
 			i++;
 		}
 		else
 		{
-			printf("Unexpected key: %.*s\n", t[i].end - t[i].start,
-				   JSON_STRING + t[i].start);
+			//printf("Unexpected key: %.*s\n", t[i].end - t[i].start,
+			//	   JSON_STRING + t[i].start);
 		}
 	}
 
@@ -988,26 +1021,27 @@ static char *construct_querystring(t_client *client, char *originurl, char *quer
 
 	s_config *config = config_get_config();
 	add_info[0]=0;
+//debug(LOG_DEBUG, "!!! parce_board_ugb %s", BOARD_JSON_PATH);
 	parce_board_ugb(BOARD_JSON_PATH);
-
+debug(LOG_DEBUG, "config->fas_secure_enabled = %d", config->fas_secure_enabled);
 	if (config->fas_secure_enabled == 0) {
 //		snprintf(querystr, QUERYMAXLEN, "?clientip=%s&gatewayname=%s&tok=%s", client->ip, config->gw_name, client->token);
-		debug(LOG_DEBUG, "config->fas_secure_enabled == 0");
+//debug(LOG_DEBUG, "config->fas_secure_enabled == 0");
 
 		get_client_interface(clientif, sizeof(clientif), client->mac);
 		snprintf(querystr, QUERYMAXLEN,
 		//	"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s",
-			"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s%addinfo=%s",
+			"?clientip=%s%sgatewayname=%s%stok=%s%sclientmac=%s%sgatewayaddress=%s%sauthdir=%s%sgwmac=%s%sserial=%s",
 			client->ip, "&",
 			config->gw_name, "&",
 			client->token, "&",
 			client->mac, "&",
 			config->gw_address, "&",
 			config->authdir, "&",
-			config->gw_mac, "&",
-			add_info
+			config->gw_mac
+			, "&", add_info
 			);
-		debug(LOG_DEBUG, "querystr=%s", querystr);
+debug(LOG_DEBUG, "querystr=%s", querystr);
 
 	} else if (config->fas_secure_enabled == 1) {
 
