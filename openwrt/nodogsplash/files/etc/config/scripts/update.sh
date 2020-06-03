@@ -115,7 +115,7 @@ checkUpdates $update  >> /etc/config/scripts/update.log
 sendStatus $serial "UPDATE" "Обновления для RT-AC51U $(date)"
 
 #sleep 5
-sendStatus $serial "LOG" "$(cat /etc/config/scripts/update.log)"
+#sendStatus $serial "LOG" "$(cat /etc/config/scripts/update.log)"
 sendStatus $serial "REBOOT" "Перезагрузка... work $(uptime) date $(date)"
 /sbin/reboot
 
