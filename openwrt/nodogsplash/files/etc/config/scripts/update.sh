@@ -1,4 +1,5 @@
 #!/bin/sh
+ver="Ver. 1.0.21"
 
 [ -f /etc/config/scripts/functions.sh ] &&
 {
@@ -89,6 +90,7 @@ checkDiff() {
 }
 
 echo "-------------------------------------------------------" > /etc/config/scripts/update.log
+echo $ver >> /etc/config/scripts/update.log
 date  >> /etc/config/scripts/update.log
 
 checkDiff
@@ -111,3 +113,5 @@ sendStatus $serial "REBOOT" "Перезагрузка... $(date)" >> /etc/config
 /sbin/reboot
 
 echo "-------------------------------------------------------" >> /etc/config/scripts/update.log
+
+cat /etc/config/scripts/update.log
