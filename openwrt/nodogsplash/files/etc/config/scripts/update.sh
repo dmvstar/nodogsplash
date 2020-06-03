@@ -88,7 +88,7 @@ checkDiff() {
   }
 }
 
-echo "-------------------------------------------------------" >> /etc/config/scripts/update.log
+echo "-------------------------------------------------------" > /etc/config/scripts/update.log
 date  >> /etc/config/scripts/update.log
 
 checkDiff
