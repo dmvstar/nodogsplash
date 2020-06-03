@@ -48,6 +48,7 @@ define Package/nodogsplash/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/config/scripts
 	$(INSTALL_DIR) $(1)/etc/init.d
+
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DIR) $(1)/usr/lib/nodogsplash
 	$(CP) $(PKG_BUILD_DIR)/resources/splash.html $(1)/etc/nodogsplash/htdocs/
@@ -63,7 +64,8 @@ define Package/nodogsplash/install
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/board_ugb.json $(1)/etc/config/scripts/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/version_ugb $(1)/etc/config/scripts/
 
-#	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/crontabs/
+	#$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/crontabs/
+
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/crontabs/root $(1)/etc/config/scripts/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/init.d/nodogsplash $(1)/etc/init.d/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/uci-defaults/40_nodogsplash $(1)/etc/uci-defaults/
