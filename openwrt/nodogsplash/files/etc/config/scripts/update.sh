@@ -12,7 +12,7 @@ cd /etc/config/scripts/         || exit 0
 [ -d updates ] || mkdir updates || exit 0
 cd updates                      || exit 0
 
-sendStatus() {
+sendStatusO() {
       serial=$1
       S=$2
       M=$3
@@ -95,6 +95,8 @@ date  >> /etc/config/scripts/update.log
 
 checkDiff
 
+sendStatus $serial "UPDATE" "Обновления для RT-AC51U $(date)"
+
 checkUpdates update.tar   >> /etc/config/scripts/update.log
 
 board_ugb=/etc/config/scripts/board_ugb.json
@@ -105,11 +107,11 @@ serial="NONE"
     serial=$(cat $board_ugb | grep "serial_numbe" | awk -F':' '{print $2}'| sed 's/[\t ", ]//g')
     update=$serial-update.tar
     checkUpdates $update  >> /etc/config/scripts/update.log
-    sendStatus $serial "UPDATE" "Обновления для RT-AC51U $(date)" >> /etc/config/scripts/update.log
 }
 
 #sleep 5
-sendStatus $serial "REBOOT" "Перезагрузка... $(date)" >> /etc/config/scripts/update.log
+sendStatus $serial "LOG" "$(cat /etc/config/scripts/update.log)"
+sendStatus $serial "REBOOT" "Перезагрузка... $(uptime) $(date)"
 /sbin/reboot
 
 echo "-------------------------------------------------------" >> /etc/config/scripts/update.log
