@@ -98,9 +98,9 @@ checkDiff
 checkUpdates update.tar   >> /etc/config/scripts/update.log
 
 board_ugb=/etc/config/scripts/board_ugb.json
-serial="NONE"
+serial="NONE0"
 
-getSerial()
+getSerial
 
 update=$serial-update.tar
 checkUpdates $update  >> /etc/config/scripts/update.log

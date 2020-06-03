@@ -21,11 +21,12 @@ sendStatus() {
 }
 
 getSerial() {
-  serial="NONE"
+  serial="NONES"
+  board_ugb=/etc/config/scripts/board_ugb.json
 
   [ -f $board_ugb ] && {
       #"serial_number":<------>"KAIWDV000912"
       serial=$(cat $board_ugb | grep "serial_numbe" | awk -F':' '{print $2}'| sed 's/[\t ", ]//g')
   }
-  echo $serial
+  #echo $serial
 }
