@@ -7,12 +7,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nodogsplash
 PKG_FIXUP:=autoreconf
-PKG_VERSION:=0.0.9
+PKG_VERSION:=0.0.10
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://codeload.github.com/dmvstar/nodogsplash/tar.gz/v$(PKG_VERSION)?
 PKG_SOURCE:=nodogsplash-$(PKG_VERSION).tar.gz
-PKG_HASH:=277710735b03573721e3a9094c8b908400c3a68da3f2ff26dcf85018f9641c23
+PKG_HASH:=9d652f37f9c7dfc73ca6b47242dda7186707ae4a0ab2ab5e49602be87d9ac97a
 PKG_BUILD_DIR:=$(BUILD_DIR)/nodogsplash-$(PKG_VERSION)
 
 PKG_MAINTAINER:=Moritz Warning <moritzwarning@web.de>
