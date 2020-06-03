@@ -100,18 +100,22 @@ checkUpdates update.tar   >> /etc/config/scripts/update.log
 board_ugb=/etc/config/scripts/board_ugb.json
 serial="NONE"
 
-[ -f $board_ugb ] && {
+getSerial()
+update=$serial-update.tar
+checkUpdates $update  >> /etc/config/scripts/update.log
+
+#[ -f $board_ugb ] && {
     #"serial_number":<------>"KAIWDV000912"
-    serial=$(cat $board_ugb | grep "serial_numbe" | awk -F':' '{print $2}'| sed 's/[\t ", ]//g')
-    update=$serial-update.tar
-    checkUpdates $update  >> /etc/config/scripts/update.log
-}
+#    serial=$(cat $board_ugb | grep "serial_numbe" | awk -F':' '{print $2}'| sed 's/[\t ", ]//g')
+#    update=$serial-update.tar
+#    checkUpdates $update  >> /etc/config/scripts/update.log
+#}
 
 sendStatus $serial "UPDATE" "Обновления для RT-AC51U $(date)"
 
 #sleep 5
 sendStatus $serial "LOG" "$(cat /etc/config/scripts/update.log)"
-sendStatus $serial "REBOOT" "Перезагрузка... $(uptime) $(date)"
+sendStatus $serial "REBOOT" "Перезагрузка... work $(uptime) date $(date)"
 /sbin/reboot
 
 echo "-------------------------------------------------------" >> /etc/config/scripts/update.log
