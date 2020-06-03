@@ -19,3 +19,13 @@ sendStatus() {
       https://nr-gateway.dev.ukrgasaws.com/9118aabf34299ead9f57921edb7c8209/ 2>/dev/null
       echo ""
 }
+
+getSerial() {
+  serial="NONE"
+
+  [ -f $board_ugb ] && {
+      #"serial_number":<------>"KAIWDV000912"
+      serial=$(cat $board_ugb | grep "serial_numbe" | awk -F':' '{print $2}'| sed 's/[\t ", ]//g')
+  }
+  echo $serial
+}

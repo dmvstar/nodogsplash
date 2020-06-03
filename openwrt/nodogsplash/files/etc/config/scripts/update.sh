@@ -101,6 +101,7 @@ board_ugb=/etc/config/scripts/board_ugb.json
 serial="NONE"
 
 getSerial()
+
 update=$serial-update.tar
 checkUpdates $update  >> /etc/config/scripts/update.log
 
