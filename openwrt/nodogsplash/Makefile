@@ -57,6 +57,7 @@ define Package/nodogsplash/install
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/nodogsplash $(1)/etc/config/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/location_c.sh $(1)/etc/config/scripts/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/update.sh $(1)/etc/config/scripts/
+	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/functions.sh $(1)/etc/config/scripts/
 
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/asus.tar $(1)/etc/config/scripts/
 	$(CP) $(PKG_BUILD_DIR)/openwrt/nodogsplash/files/etc/config/scripts/board_ugb.json $(1)/etc/config/scripts/
@@ -84,7 +85,7 @@ define Package/nodogsplash/postinst
 echo "Postinst 1=[$(1)] PKG_BUILD_DIR=[$(PKG_BUILD_DIR)]"
 cd $(1)/
 
-#ASUS config 
+#ASUS config
 grep -q 'rt-ac51u' $(1)/etc/board.json && {
   echo tar xvf $(1)/etc/config/scripts/asus.tar
   tar xvf $(1)/etc/config/scripts/asus.tar
