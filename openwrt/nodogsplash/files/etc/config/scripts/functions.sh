@@ -3,10 +3,11 @@ functions_ver="Ver. 1.0.21"
 
 sendStatus() {
       serial=$1
-      S=$2
-      M=$3
+      mac=$2
+      S=$3
+      M=$4
 
-      D="{\"log\":{\"serial\":\"$serial\",\"status\":\"$S\",\"message\":\"$M\"}}"
+      D="{\"log\":{\"serial\":\"$serial\", \"mac\":\"$mac\",\"status\":\"$S\",\"message\":\"$M\"}}"
       #echo $D
 
       curl -XPOST \

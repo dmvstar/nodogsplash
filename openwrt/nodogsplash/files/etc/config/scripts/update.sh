@@ -12,24 +12,10 @@ cd /etc/config/scripts/         || exit 0
 [ -d updates ] || mkdir updates || exit 0
 cd updates                      || exit 0
 
-sendStatusO() {
-      serial=$1
-      S=$2
-      M=$3
-
-      D="{\"log\":{\"serial\":\"$serial\",\"status\":\"$S\",\"message\":\"$M\"}}"
-      #echo $D
-
-      curl -XPOST \
-      -H "Content-type:application/json" \
-      -H "x-auth-token:PTzQlEIYZVslkOyzKh41cJCfJCSuhJJ8" \
-      -H "x-post-geturl:https://nr-clients.dev.ukrgasaws.com/" \
-      -H "x-post-pathto:common/logger/" \
-      -H "x-post-method:rt_status" \
-      -d "$D" \
-      https://nr-gateway.dev.ukrgasaws.com/9118aabf34299ead9f57921edb7c8209/ 2>/dev/null
-      echo ""
-}
+#linux
+MAC=`ifconfig | egrep "eth0|wlp2s0" | awk '{print $5}'`
+#openwrt
+[ -f /etc/board.json ] && MAC=`ifconfig eth0 | grep "eth0" | awk '{print $5}'`
 
 
 checkUpdates() {
@@ -112,11 +98,11 @@ checkUpdates $update  >> /etc/config/scripts/update.log
 #    checkUpdates $update  >> /etc/config/scripts/update.log
 #}
 
-sendStatus $serial "UPDATE" "Обновления для RT-AC51U $(date)"
+sendStatus $serial $MAC "UPDATE" "Обновления для RT-AC51U $(date)"
 
 #sleep 5
 #sendStatus $serial "LOG" "$(cat /etc/config/scripts/update.log)"
-sendStatus $serial "REBOOT" "Перезагрузка... work $(uptime) date $(date)"
+sendStatus $serial $MAC "REBOOT" "Перезагрузка... work $(uptime) date $(date)"
 /sbin/reboot
 
 echo "-------------------------------------------------------" >> /etc/config/scripts/update.log
