@@ -84,6 +84,7 @@ checkDiff
 checkUpdates update.tar   >> /etc/config/scripts/update.log
 
 board_ugb=/etc/config/scripts/board_ugb.json
+post_update=/etc/config/scripts/post_update.sh
 serial="NONE0"
 
 getSerial
@@ -99,6 +100,11 @@ checkUpdates $update  >> /etc/config/scripts/update.log
 #}
 
 sendStatus $serial $MAC "UPDATE" "Обновления для RT-AC51U $(date)"
+
+[ -f $post_update ] && {
+    sh $post_update
+    rm $post_update
+}
 
 #sleep 5
 #sendStatus $serial "LOG" "$(cat /etc/config/scripts/update.log)"

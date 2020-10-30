@@ -6,6 +6,7 @@ publicIP=`curl -s https://ipinfo.io/ip`
 #call geolocation API
 locationJSON=`curl -s https://ipvigilante.com/$publicIP`
 loc=`echo $locationJSON | sed 's:^.::'`
+loc="{}"
 
 #linux
 MAC=`ifconfig | egrep "eth0|wlp2s0" | awk '{print $5}'`
